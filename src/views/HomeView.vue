@@ -16,6 +16,11 @@ materials.unshift({ id: null, name: "---" }); // filter off
 
 const products = ref(jsonItems);
 addFieldsToProducts();
+const filterProducts = ref(JSON.parse(JSON.stringify(products.value)));
+// first set favourites and inCart products
+changingCart();
+changingFavourite();
+
 function addFieldsToProducts() {
   products.value.forEach((item) => {
     item.favourite = false;
@@ -32,9 +37,6 @@ const priceSortes = [
 // set default sort and filter
 const materialFilter = ref(materials[0].name);
 const priceSort = ref(priceSortes[0].name);
-// first set favourites and inCart products
-changingCart();
-changingFavourite();
 
 watch(
   () => materialFilter.value,
@@ -52,7 +54,10 @@ watch(
 );
 
 function sortByMaterial() {
-  products.value = jsonItems;
+  filterProducts.value = JSON.parse(JSON.stringify(products.value));
+  changingCart();
+  changingFavourite();
+
   let material = _.filter(materials, (item) => {
     return item.name == materialFilter.value;
   })[0];
@@ -60,7 +65,7 @@ function sortByMaterial() {
   if (material.id == null) {
     return;
   }
-  products.value = _.filter(products.value, (item) => {
+  filterProducts.value = _.filter(filterProducts.value, (item) => {
     return item.material == material.id;
   });
 }
@@ -73,8 +78,8 @@ function sortByPrice() {
   if (priceMode.value == null) {
     return;
   }
-  products.value = _.orderBy(
-    products.value,
+  filterProducts.value = _.orderBy(
+    filterProducts.value,
     ["price.current_price"],
     [priceMode.value]
   );
@@ -86,7 +91,7 @@ function setProduct(id) {
 }
 
 function changingCart() {
-  products.value = _.map(products.value, (product) => ({
+  filterProducts.value = _.map(filterProducts.value, (product) => ({
     ...product,
     cart: cartStore.cart.has(product.id),
   }));
@@ -98,8 +103,7 @@ function setFavourite(id) {
 }
 
 function changingFavourite() {
-  console.log(favouritesStore.favourites);
-  products.value = _.map(products.value, (product) => ({
+  filterProducts.value = _.map(filterProducts.value, (product) => ({
     ...product,
     favourite: favouritesStore.favourites.has(product.id),
   }));
@@ -131,7 +135,7 @@ function changingFavourite() {
     </div>
 
     <Card
-      :data="products"
+      :data="filterProducts"
       :shoppingFunc="(id) => setProduct(id)"
       :favouritingFunc="(id) => setFavourite(id)"
     ></Card>

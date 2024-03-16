@@ -13,7 +13,7 @@ export default defineConfig({
       svgoConfig: {},
     }),
   ],
-  base: "/tages-test/",
+  // base: "/tages-test/",
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),

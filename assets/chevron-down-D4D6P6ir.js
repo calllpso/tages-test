@@ -1,0 +1,1 @@
+import{o as e,c as o,a as t}from"./index-4MDTLin_.js";const n={xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24"},s=t("path",{d:"M7.41 8.58 12 13.17l4.59-4.59L18 10l-6 6-6-6z"},null,-1),c=[s];function r(a,l){return e(),o("svg",n,[...c])}const _={render:r};export{_ as default,r as render};
